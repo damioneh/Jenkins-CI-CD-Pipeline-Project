@@ -5,12 +5,10 @@ def COLOR_MAP = [
 
 pipeline {
     agent any
-    
     environment{
         //MESSAGE='Hello Folks'
         WORKSPACE = "${env.WORKSPACE}"
-        //BUILD_NUMBER = '${env.BUILD_NUMBER}'
-    
+        //BUILD_NUMBER = '${env.BUILD_NUMBER}'   
     }
     
     tools{
@@ -125,12 +123,12 @@ pipeline {
                 sh 'ls'
                 sh "ansible-playbook ${WORKSPACE}/deploy.yaml --extra-vars \'hosts=$HOSTS workspace_path=${WORKSPACE}\'"
             }
-        }
         
-        post {
-            always {
-                echo 'I will always say Hello again!'
-                slackSend channel: '#glorious-w-f-devops-alerts', color: COLOR_MAP[currentBuild.currentResult], message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+            post {
+                always {
+                    echo 'I will always say Hello again!'
+                    slackSend channel: '#glorious-w-f-devops-alerts', color: COLOR_MAP[currentBuild.currentResult], message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+                }
             }
         }
     }
